@@ -1,7 +1,7 @@
 <template>
   <div class="hone">
-    <v-header></v-header>
-    <div class="tab">
+    <v-header :seller="seller"></v-header>
+    <div class="tab border-1px">
       <div class="tab-item">
         <router-link :to="{ path:'goods' }" active-class="active">商品</router-link>
       </div>
@@ -17,24 +17,41 @@
 </template>
 
 <script>
-  import header from './components/header/header';
+  import header from 'components/header/header';
+
+  const ERR_OK = 0;
+
   export default {
+    data () {
+      return {
+        seller: {}
+      };
+    },
+    created: function() {
+      // console.log(this.$http);
+      this.$http.get('/api/seller').then(response => {
+        if (response.data.erron === ERR_OK) {
+          this.seller = response.data.data;
+        }
+      });
+    },
     components: {
       'v-header': header
     }
   };
 </script>
 
-<style rel="stylesheet" lang="scss">
-  body{
-    background-color:#e8e8e8;
-  }
+<style lang="scss">
+@import 'common/scss/mixin';
+  body{}
   .tab{
     display: flex;
     width:100%;
     line-height: 40px;
     background-color:#fff;
-    box-shadow:(0 1px 2px rgba(7,17,27,.1));
+    /*box-shadow:(0 1px 2px rgba(7,17,27,.1));*/
+    /*移动端1px解决方案*/
+    @include border-1px(rgba(7,17,27,.1));
     .tab-item{
       flex: 1;
       text-align: center;

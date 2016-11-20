@@ -1,0 +1,26 @@
+body, html{
+    line-height:1;
+    font-weight: 200;
+    font-family: "PingFang SC","STHeitiSC-Light","Helvetice-Light",arial,sans-serif;
+}
+.clearfix:after{
+        content:'';
+        display: table;
+        clear: both;
+}
+@media (-webkit-min-devicp-pixel-ratio: 1.5) and (min-devicp-pixel-ratio: 1.5) {
+    .border-1px{
+        &:after{
+            -webkit-transform: scaleY(0.7);
+            transform: scaleY(0.7)
+        }
+    }
+}
+@media (-webkit-min-devicp-pixel-ratio: 2) and (min-devicp-pixel-ratio: 2) {
+    .border-1px{
+        &:after{
+            -webkit-transform: scaleY(0.5);
+            transform: scaleY(0.5)
+        }
+    }
+}
