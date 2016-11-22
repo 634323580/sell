@@ -41,26 +41,28 @@
   };
 </script>
 
-<style lang="scss">
-@import 'common/scss/mixin';
-  body{}
-  .tab{
+<style lang="scss" scoped>
+  @import 'common/scss/mixin';
+  body {}
+  
+  .tab {
     display: flex;
-    width:100%;
+    width: 100%;
     line-height: 40px;
-    background-color:#fff;
+    background-color: #fff;
+    z-index: 3;
     /*box-shadow:(0 1px 2px rgba(7,17,27,.1));*/
     /*移动端1px解决方案*/
-    @include border-1px(rgba(7,17,27,.1));
-    .tab-item{
+    @include border-1px(rgba(7, 17, 27, .1));
+    .tab-item {
       flex: 1;
       text-align: center;
-      font-size:14px;
-      color:rgb(77,85,93);
-      a{
-        display:block;
-        &.active{
-          color:rgb(240,20,20);
+      font-size: 14px;
+      color: rgb(77, 85, 93);
+      a {
+        display: block;
+        &.active {
+          color: rgb(240, 20, 20);
         }
       }
     }
