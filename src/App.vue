@@ -12,7 +12,7 @@
         <router-link :to="{ path:'/seller' }" active-class="active">商家</router-link>
       </div>
     </div>
-    <router-view></router-view>
+    <router-view :seller="seller"></router-view>
   </div>
 </template>
 
@@ -43,8 +43,6 @@
 
 <style lang="scss" scoped>
   @import 'common/scss/mixin';
-  body {}
-  
   .tab {
     display: flex;
     width: 100%;

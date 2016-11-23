@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menu">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{on:index === currentIndex}">
+        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{on:index === currentIndex}" @click="_selectMenu(index,$event)">
           <span class="text border-1px">
                         <template v-if="item.type > 0">
                             <hot :size='3' :type="item.type"></hot>
@@ -31,18 +31,25 @@
                   <span class="now">￥{{food.price}}</span>
                   <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <cartcontrol :food="food"></cartcontrol>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
   </div>
 </template>
 <script>
     import BScroll from 'better-scroll';
-    const ERR_OK = 0;
     import hot from 'components/hot/hot';
+    import shopcart from 'components/shopcart/shopcart';
+    import cartcontrol from 'components/cartcontrol/cartcontrol';
+    import Bus from 'common/js/bus';
+    const ERR_OK = 0;
     export default {
         props: {
             seller: {
@@ -66,13 +73,20 @@
                     });
                 }
             });
+            // 监听事件获取add商品DOM
+            Bus.$on(':eventCartadd', avtiveEl => {
+              this._drop(avtiveEl);
+            });
         },
         methods: {
             _initScroll() {
-                this.neunScroll = new BScroll(this.$refs.menu, {});
+                this.meunScroll = new BScroll(this.$refs.menu, {
+                  click: true
+                });
 
                 this.foodScroll = new BScroll(this.$refs.foods, {
-                    probeType: 3
+                    probeType: 3,
+                    click: true
                 });
 
                 this.foodScroll.on('scroll', (pos) => {
@@ -89,6 +103,19 @@
                     height += item.clientHeight;
                     this.listHeight.push(height);
                 }
+            },
+            _selectMenu(index, event) {
+              if(!event._constructed) {
+                return;
+              }
+              console.log(index);
+              let foodList = this.$refs.foods.getElementsByClassName('food-list-hook');
+              let el = foodList[index];
+              this.foodScroll.scrollToElement(el, 300);
+            },
+            _drop: function(target) {
+              // 访问子组件
+              this.$refs.shopcart.drop(target);
             }
         },
         computed: {
@@ -112,10 +139,26 @@
                         return i;
                     }
                 }
+            },
+            selectFoods: function() {
+              let foods = [];
+              this.goods.forEach(good => {
+                // good 循环获得大分类。
+                good.foods.forEach(food => {
+                  // good.foods 循环所有大分类里面的商品
+                  if(food.count) {
+                    // 判断是否有count 有则表示商品有被选中，push
+                    foods.push(food);
+                  }
+                });
+              });
+              return foods;
             }
         },
         components: {
-            hot
+            hot,
+            shopcart,
+            cartcontrol
         }
     };
 </script>
@@ -234,9 +277,12 @@
             color: rgb(147, 153, 159);
           }
         }
+        .cartcontrol-wrapper{
+          position: absolute;
+          right: 0;
+          bottom: 14px;
+        }
       }
     }
   }
-
 </style>
-
