@@ -48,7 +48,6 @@
     import hot from 'components/hot/hot';
     import shopcart from 'components/shopcart/shopcart';
     import cartcontrol from 'components/cartcontrol/cartcontrol';
-    import Bus from 'common/js/bus';
     const ERR_OK = 0;
     export default {
         props: {
@@ -72,10 +71,6 @@
                         this._calculateHeight();
                     });
                 }
-            });
-            // 监听事件获取add商品DOM
-            Bus.$on(':eventCartadd', avtiveEl => {
-              this._drop(avtiveEl);
             });
         },
         methods: {
@@ -112,10 +107,6 @@
               let foodList = this.$refs.foods.getElementsByClassName('food-list-hook');
               let el = foodList[index];
               this.foodScroll.scrollToElement(el, 300);
-            },
-            _drop: function(target) {
-              // 访问子组件
-              this.$refs.shopcart.drop(target);
             }
         },
         computed: {

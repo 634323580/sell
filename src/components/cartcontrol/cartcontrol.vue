@@ -38,7 +38,7 @@
                     console.log(this.food.count);
                 }
                 // bus组件通信
-                Bus.$emit(':eventCartadd', event.target);
+                   Bus.$emit(':eventCartadd', event.target);
             },
             // 删除商品
             decreaseCart: function (event) {

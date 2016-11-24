@@ -18,15 +18,16 @@
             </div>
         </div>
         <div class="ball-container">
-            <transition-group name="drop" v-on:before-enter="beforeEnter" v-on:after-enter="afterEnter" v-on:enter="enter">
-                <div v-for="(ball,index) in balls" v-show="ball.show" class="ball" :key="index">
+            <transition v-for="(ball,index) in balls" name="drop" v-on:before-enter="beforeEnter" v-on:after-enter="afterEnter" v-on:enter="enter">
+                <div v-show="ball.show" class="ball">
                     <div class="inner inner-hook"></div>
                 </div>
-            </transition-group>
+            </transition>
         </div>
     </div>
 </template>
 <script>
+    import Bus from 'common/js/bus';
     export default {
         props: {
             // 被选中的商品价钱和数量
@@ -79,7 +80,25 @@
                 };
             },
         created: function() {
-            // console.log(this.balls);
+            // 监听事件获取add商品DOM
+            let i = 0;
+            Bus.$on(':eventCartadd', el => {
+                this.$nextTick(function() {
+                    while(i < this.balls.length) {
+                        i++;
+                        if(i >= this.balls.length) {
+                            i = 0;
+                        }
+                    let ball = this.balls[i];
+                    if(!ball.show) {
+                        ball.show = true;
+                        ball.el = el;
+                        this.dropBall.push(ball);
+                        return;
+                    }
+                    }
+                });
+            });
         },
         computed: {
             // 计算总价 循环被选中的商品累加 每个商品价格*数量
@@ -123,17 +142,6 @@
             }
         },
         methods: {
-            drop(el) {
-               for(let i = 0; i < this.balls.length; i++) {
-                   let ball = this.balls[i];
-                   if(!ball.show) {
-                       ball.show = true;
-                       ball.el = el;
-                       this.dropBall.push(ball);
-                       return;
-                   }
-               }
-            },
             beforeEnter: function(el) {
                 let count = this.balls.length;
                 while (count--) {
@@ -152,24 +160,24 @@
                 }
             },
             enter: function(el, done) {
-                console.log(1234);
                 /* eslint-disable no-unused-vars */
                 let elHeight = el.offsetHeight;
-                console.log(elHeight);
                 this.$nextTick(() => {
-                        el.style.webkitTransform = 'translate3d(0,0,0)';
-                        el.style.transform = 'translate3d(0,0,0)';
-                        let inner = el.getElementsByClassName('inner-hook')[0];
-                        inner.style.webkitTransform = 'translate3d(0,0,0)';
-                        inner.style.transform = 'translate3d(0,0,0)';
+                        setTimeout(function() {
+                            el.style.webkitTransform = 'translate3d(0,0,0)';
+                            el.style.transform = 'translate3d(0,0,0)';
+                            let inner = el.getElementsByClassName('inner-hook')[0];
+                            inner.style.webkitTransform = 'translate3d(0,0,0)';
+                            inner.style.transform = 'translate3d(0,0,0)';
+                        });
                 });
                 done();
             },
             afterEnter: function(el) {
                 let ball = this.dropBall.shift();
                 if(ball) {
-                    ball.show = false;
-                    // el.style.display = 'none';
+                        ball.show = false;
+                        el.style.display = 'none';
                 };
             }
         }
@@ -289,20 +297,16 @@
                 bottom: 22px;
                 transition: all .4s;
                 z-index: 9;
+                &.drop-leave-active{
                     transition: all .4s cubic-bezier(0.49,-0.29,0.75,0.41);
+                }
                 .inner {
                     width: 16px;
                     height: 16px;
+                    transition: all .4s linear;
                     border-radius: 50%;
                     background: rgb(0, 160, 220);
-                    /*transition: all .4s cubic-bezier(0.49,-0.29,0.75,0.41);*/
                 }
-                /*&.ball-enter-active,&.ball-leave-active{
-                    transition:all .4s;
-                    .inner{
-                        transition:all .4s;
-                    }
-                }*/
             }
         }
     }
