@@ -12,7 +12,6 @@
     </div>
 </template>
 <script>
-    import Vue from 'vue';
     import Bus from 'common/js/bus';
     export default {
         props: {
@@ -32,13 +31,15 @@
                 if(!this.food.count) {
                     // this.food.count = 1;
                     // console.log(this.food.count);
-                    Vue.set(this.food, 'count', 1);
+                    this.$set(this.food, 'count', 1);
                 }else {
                     this.food.count++;
                     console.log(this.food.count);
                 }
                 // bus组件通信
-                   Bus.$emit(':eventCartadd', event.target);
+                   setTimeout(function() {
+                       Bus.$emit(':eventCartadd', event.target);
+                   });
             },
             // 删除商品
             decreaseCart: function (event) {
@@ -81,10 +82,10 @@
             }
         }
         .decrease-enter,.decrease-leave-active{
-            transform:translate3d(24px,0,0);
+            transform:translate3d(-24px,0,0);
             opacity: 0;
             .line{
-                transform:rotate(180deg);
+                transform:rotate(-180deg);
                 opacity: 0;
             }
         }

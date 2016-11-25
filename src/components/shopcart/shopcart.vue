@@ -19,11 +19,13 @@
                 </div>
             </div>
             <div class="ball-container">
-                <transition v-for="(ball,index) in balls" name="drop" v-on:before-enter="beforeEnter" v-on:after-enter="afterEnter" v-on:enter="enter">
-                    <div v-show="ball.show" class="ball">
-                        <div class="inner inner-hook"></div>
-                    </div>
-                </transition>
+                <template v-for="ball in balls">
+                    <transition name="drop" v-on:before-enter="beforeEnter" v-on:after-enter="afterEnter" v-on:enter="enter">
+                        <div v-show="ball.show" class="ball">
+                            <div class="inner inner-hook"></div>
+                        </div>
+                    </transition>
+                </template>
             </div>
             <transition name="fold">
                 <div class="shopcart-list" v-show="listShow">
@@ -45,7 +47,7 @@
                         </ul>
                     </div>
                 </div>
-            </transition>
+            </transitiona>
         </div>
         <transition name="mask">
             <div class="list-mask" v-show="listShow" @click="toggleList"></div>
@@ -112,21 +114,19 @@
             // 监听事件获取add商品DOM
             let i = 0;
             Bus.$on(':eventCartadd', el => {
-                this.$nextTick(function() {
                     while(i < this.balls.length) {
                         i++;
                         if(i >= this.balls.length) {
                             i = 0;
                         }
-                    let ball = this.balls[i];
-                    if(!ball.show) {
-                        ball.show = true;
-                        ball.el = el;
-                        this.dropBall.push(ball);
-                        return;
+                        let ball = this.balls[i];
+                        if(!ball.show) {
+                            ball.show = true;
+                            ball.el = el;
+                            this.dropBall.push(ball);
+                            return;
+                        }
                     }
-                    }
-                });
             });
         },
         computed: {
@@ -250,7 +250,7 @@
                 if(this.totalPrice < this.minPrice) {
                     return;
                 }
-                window.alert(`支付${this.totalPrice + this.deliveryPrice}元,包含配送费`);
+                window.alert(`支付${this.totalPrice + this.deliveryPrice}元,包含配送费${this.deliveryPrice}元`);
             }
         },
         components: {
@@ -259,7 +259,7 @@
     };
 </script>
 <style lang="scss" scoped>
-  @import '../../common/scss/mixin';
+    @import '../../common/scss/mixin';
     .shopcart {
         position: fixed;
         bottom: 0;
@@ -373,9 +373,7 @@
                 bottom: 22px;
                 transition: all .4s;
                 z-index: 9;
-                &.drop-leave-active {
-                    transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
-                }
+                transition: all .4s cubic-bezier(0.49, -0.29, 0.75, 0.41);
                 .inner {
                     width: 16px;
                     height: 16px;
@@ -391,14 +389,14 @@
             left: 0;
             width: 100%;
             transform: translate3d(0, -100%, 0);
-            z-index:-1;
+            z-index: -1;
             &.fold-enter-active,
             &.fold-leave-active {
                 transition: 0.5s ease;
             }
             &.fold-enter,
             &.fold-leave-active {
-                transform: translate3d(0, 100%, 0);
+                transform: translate3d(0, 0, 0);
             }
             .list-header {
                 height: 40px;
@@ -414,44 +412,45 @@
                 .empty {
                     float: right;
                     font-size: 12px;
-                    color:rgb(0, 160, 220);
+                    color: rgb(0, 160, 220);
                 }
             }
-            .list-content{
-                padding:0 18px;
+            .list-content {
+                padding: 0 18px;
                 max-height: 217px;
-                overflow:hidden;
+                overflow: hidden;
                 background: #fff;
-                .food{
-                    position:relative;
-                    padding:12px 0;
-                    box-sizing:border-box;
+                .food {
+                    position: relative;
+                    padding: 12px 0;
+                    box-sizing: border-box;
                     @include border-1px(rgba(7, 17, 27, .1));
                 }
-                .name{
+                .name {
                     line-height: 24px;
                     font-size: 14px;
-                    color:rgb(7,17,27);
+                    color: rgb(7, 17, 27);
                 }
-                .price{
+                .price {
                     position: absolute;
                     right: 90px;
                     bottom: 12px;
                     line-height: 24px;
-                    font-size:14px;
-                    font-weight:700;
-                    color:rgb(240, 20, 20);
+                    font-size: 14px;
+                    font-weight: 700;
+                    color: rgb(240, 20, 20);
                 }
-                .cartcontrol-wrapper{
-                    position:absolute;
+                .cartcontrol-wrapper {
+                    position: absolute;
                     right: 0;
                     bottom: 2px;
                 }
             }
         }
     }
-    .list-mask{
-        position:fixed;
+    
+    .list-mask {
+        position: fixed;
         top: 0;
         left: 0;
         width: 100%;
@@ -463,10 +462,10 @@
         &.mask-leave-active {
             transition: 0.5s ease;
         }
-        &.mask-enter{
+        &.mask-enter {
             opacity: 0;
         }
-        &.mask-leave-active{
+        &.mask-leave-active {
             opacity: 0;
         }
     }

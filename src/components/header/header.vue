@@ -32,8 +32,10 @@
             <img :src="seller.avatar" width="100%" height="100%">
         </div>
         <transition name="fade">
-            <div v-show="detailShow" class="detail">
-                <div class="detail-wrapper clearfix">
+            <div v-show="detailShow" class="detail"  ref="detai">
+                <!--<div class="detail-wrapper clearfix" @touchmove.stop>-->
+                <div>
+                    <div class="detail-wrapper clearfix">
                     <div class="detail-main">
                         <h1 class="name">{{seller.name}}</h1>
                         <div class="start-wrapper">
@@ -68,6 +70,7 @@
                     <i class="icon-close"></i>
                 </div>
             </div>
+            </div>
         </transition>
     </div>
 </template>
@@ -75,6 +78,7 @@
 <script>
     import start from 'components/start/start';
     import hot from 'components/hot/hot';
+    import BScroll from 'better-scroll';
     export default {
         name: 'header',
         data() {
@@ -92,9 +96,20 @@
             // 控制header图层显示隐藏
             showDetail: function() {
                 this.detailShow = true;
+                this.$nextTick(function() {
+                    if(!this.scroll) {
+                        this.scroll = new BScroll(this.$refs.detai, {
+                            click: true
+                        });
+                    } else {
+                        this.scroll.refresh();
+                    }
+                });
             },
             hideDetail: function() {
                 this.detailShow = false;
+            },
+            noop: function() {
             }
         },
         created: function() {
@@ -237,10 +252,10 @@
         width: 100%;
         height: 100%;
         background: rgba(7, 17, 27, .8);
-        overflow: auto;
+        overflow: hidden;
         backdrop-filter: blur(10px);
         .detail-wrapper {
-            min-height: 100%;
+            min-height: 100vh;
             border-top: 1px solid transparent;
             box-sizing: border-box;
             .detail-main {
@@ -305,24 +320,31 @@
         }
         .detail-close {
             position: relative;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
+            line-height: 40px;
             margin: -64px auto 0;
             text-align: center;
             clear: both;
             font-size: 32px;
         }
-        &.fade-enter-active {
-            /*进入动画*/
+        &.fade-enter-active,&.fade-leave-active {
+            transition:.5s ease;
+        }
+        &.fade-enter,&.fade-leave-active {
+            transform: translateY(-100%);
+        }
+        /*&.fade-enter-active {
+            进入动画
             animation: bounce-in .5s;
         }
         &.fade-leave-active {
-            /*离开动画*/
+            离开动画
             animation: bounce-out .5s;
-        }
+        }*/
     }
     
-    @keyframes bounce-in {
+    /*@keyframes bounce-in {
         0% {
             transform: translateY(-100%);
         }
@@ -338,5 +360,5 @@
         100% {
             transform: translateY(-100%);
         }
-    }
+    }*/
 </style>
