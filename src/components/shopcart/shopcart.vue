@@ -33,7 +33,7 @@
                         <h2 class="title">购物车</h2>
                         <span class="empty" @click="empty">清空</span>
                     </div>
-                    <div class="list-content" ref="listContent">
+                    <div class="list-content" ref="listContent"  @click="eventConstructed($event)">
                         <ul>
                             <li class="food border-1px" v-for="food in selectFoods">
                                 <span class="name">{{food.name}}</span>
@@ -251,6 +251,11 @@
                     return;
                 }
                 window.alert(`支付${this.totalPrice + this.deliveryPrice}元,包含配送费${this.deliveryPrice}元`);
+            },
+            eventConstructed: function(event) {
+                if(event._constructed) {
+                    return;
+                }
             }
         },
         components: {

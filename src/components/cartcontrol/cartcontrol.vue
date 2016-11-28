@@ -1,12 +1,12 @@
 <template>
     <div class="cartcontrol">
         <transition name="decrease">
-            <div class="cart-decrease" v-show="food.count>0" @click="decreaseCart($event)">
+            <div class="cart-decrease" v-show="food.count>0" @click.stop.prevent="decreaseCart($event)">
                 <span class="line icon-remove_circle_outline"></span>
             </div>
         </transition>
         <div class="cart-count" v-show="food.count>0">{{food.count}}</div>
-        <div class="cart-add" @click="addCart($event)">
+        <div class="cart-add" @click.stop.prevent="addCart($event)">
             <i class="icon-add_circle"></i>
         </div>
     </div>
@@ -34,10 +34,9 @@
                     this.$set(this.food, 'count', 1);
                 }else {
                     this.food.count++;
-                    console.log(this.food.count);
                 }
                 // bus组件通信
-                   setTimeout(function() {
+                   setTimeout(() => {
                        Bus.$emit(':eventCartadd', event.target);
                    });
             },

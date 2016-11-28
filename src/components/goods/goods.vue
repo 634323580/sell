@@ -17,7 +17,7 @@
         <li v-for="item in goods" class="food-list food-list-hook">
           <h2 class="title">{{item.name}}</h2>
           <ul>
-            <li v-for="(food,index) in item.foods" class="food-item border-1px">
+            <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" class="food-item border-1px">
               <div class="icon">
                 <img :src="food.icon" alt="">
               </div>
@@ -41,6 +41,8 @@
       </ul>
     </div>
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
+    <!--商品详情-->
+    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 <script>
@@ -48,6 +50,7 @@
     import hot from 'components/hot/hot';
     import shopcart from 'components/shopcart/shopcart';
     import cartcontrol from 'components/cartcontrol/cartcontrol';
+    import food from 'components/food/food';
     const ERR_OK = 0;
     export default {
         props: {
@@ -59,7 +62,8 @@
             return {
                 goods: [],
                 listHeight: [],
-                scrollY: 0
+                scrollY: 0,
+                selectedFood: {}
             };
         },
         created: function() {
@@ -107,6 +111,13 @@
               let foodList = this.$refs.foods.getElementsByClassName('food-list-hook');
               let el = foodList[index];
               this.foodScroll.scrollToElement(el, 300);
+            },
+            selectFood: function(food, event) {
+              if(!event._constructed) {
+                return;
+              }
+              this.selectedFood = food;
+              this.$refs.food.show();
             }
         },
         computed: {
@@ -133,12 +144,17 @@
             },
             selectFoods: function() {
               let foods = [];
-              this.goods.forEach(good => {
+              this.goods.filter(good => {
                 // good 循环获得大分类。
-                good.foods.forEach(food => {
-                  // good.foods 循环所有大分类里面的商品
+                // good.foods.forEach(food => {
+                //   // good.foods 循环所有大分类里面的商品
+                //   if(food.count) {
+                //     // 判断是否有count 有则表示商品有被选中，push
+                //     foods.push(food);
+                //   }
+                // });
+                good.foods.filter(food => {
                   if(food.count) {
-                    // 判断是否有count 有则表示商品有被选中，push
                     foods.push(food);
                   }
                 });
@@ -149,7 +165,8 @@
         components: {
             hot,
             shopcart,
-            cartcontrol
+            cartcontrol,
+            food
         }
     };
 </script>

@@ -1,46 +1,38 @@
-import Vue from 'vue';
+// import goods from 'components/goods/goods';
 
-import VueRouter from 'vue-router';
+// import ratings from 'components/ratings/ratings';
 
-Vue.use(VueRouter);
+// import seller from 'components/seller/seller';
 
-import goods from 'components/goods/goods';
+import components from 'common/js/components';
 
-import ratings from 'components/ratings/ratings';
-
-import seller from 'components/seller/seller';
-
-Vue.use(VueRouter);
-
-var router = new VueRouter({
-  routes: [
+ let router = [
     // 默认显示路由
     {
       path: '/',
       name: 'hone',
-      component: goods
+      component: components.goods
     },
     {
       path: '/goods',
       name: 'goods',
-      component: goods
+      component: components.goods
     },
     {
       path: '/ratings',
       name: 'ratings',
-      component: ratings
+      component: components.ratings
     },
     {
       path: '/seller',
       name: 'seller',
-      component: seller
+      component: components.seller
     },
     // 重定向路由
     {
       path: '/',
       redirect: '/goods'
     }
-  ]
-});
+  ];
 
 export default router;

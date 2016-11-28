@@ -4,12 +4,20 @@ import Axios from 'axios';
 
 import App from './App';
 
-import myRouter from 'common/js/myRouter';
+import VueRoute from 'vue-router';
 
-Vue.prototype.$http = Axios;
+import MyRoutes from 'common/js/myRouter';
 
 import 'common/scss/index.scss';
 
+Vue.use(VueRoute);
+
+Vue.prototype.$http = Axios;
+
+/* eslint-disable no-new */
+let router = new VueRoute({
+  routes: MyRoutes
+});
 // Axios.interceptors.request.use(function (config) {
 //     // Do something before request is sent
 //     console.log(config);
@@ -32,7 +40,7 @@ import 'common/scss/index.scss';
 
 /* eslint-disable no-new */
 new Vue({
-  router: myRouter,
+  router,
   render: h => h(App)
 }).$mount('#app');
 
