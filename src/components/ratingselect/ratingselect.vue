@@ -1,21 +1,21 @@
 <template>
     <div class="ratingselect border-1px">
         <div class="rating-type">
-            <span @click="select(2,$event)" class="block positive" :class="{'active':selectType == 2 }">{{desc.all}}<span class="count">42</span></span>
-            <span @click="select(0,$event)" class="block positive" :class="{'active':selectType == 0 }">{{desc.positive}}<span class="count">1</span></span>
-            <span @click="select(1,$event)" class="block negative" :class="{'active':selectType == 1 }">{{desc.negative}}<span class="count">10</span></span>
+            <span @click="select(2,$event)" class="block positive" :class="{'active':selectType == 2 }">{{desc.all}}<span class="count">{{ratings.length}}</span></span>
+            <span @click="select(0,$event)" class="block positive" :class="{'active':selectType == 0 }">{{desc.positive}}<span class="count">{{positives.length}}</span></span>
+            <span @click="select(1,$event)" class="block negative" :class="{'active':selectType == 1 }">{{desc.negative}}<span class="count">{{negatives.length}}</span></span>
         </div>
         <div class="switch" :class="{'on':onlyContent}">
             <span class="icon-check_circle"></span>
-            <span class="text">只看有内容的评价</span>
+            <span @click="toggleContent($event)" class="text">只看有内容的评价</span>
         </div>
     </div>
 </template>
 <script>
     // 正面
-    // const POSTTIVE = 0;
+    const POSITIVE = 0;
     // 负面
-    // const NEGATIVE = 1;
+    const NEGATIVE = 1;
     // 全部
     const ALL = 2;
     export default {
@@ -45,20 +45,32 @@
                 }
             }
         },
-        data() {
-            return {
-                selectTypes: this.selectType
-            };
-        },
-        created() {
-            console.log(this.ratings);
+        computed: {
+            positives() {
+                return this.ratings.filter(rating => {
+                    return rating.rateType === POSITIVE;
+                });
+            },
+            negatives() {
+                return this.ratings.filter(rating => {
+                   return rating.rateType === NEGATIVE;
+                });
+            }
         },
         methods: {
             select: function(type, event) {
                 if(!event._constructed) {
                     return;
                 }
-                this.selectType = type;
+                // 事件通知food组件我点击改变了selectType
+                this.$emit(':eventSelectType', type);
+            },
+            toggleContent: function(event) {
+                if(!event._constructed) {
+                    return;
+                }
+                // 事件通知food组件我点击改变了onlyContent
+                this.$emit(':eventToggle', !this.onlyContent);
             }
         }
     };
