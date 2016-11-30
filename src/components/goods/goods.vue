@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menu">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{on:index === currentIndex}" @click="_selectMenu(index,$event)">
+        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'on':index === currentIndex}" @click="_selectMenu(index,$event)">
           <span class="text border-1px">
                         <template v-if="item.type > 0">
                             <hot :size='3' :type="item.type"></hot>
@@ -67,14 +67,35 @@
             };
         },
         created: function() {
-            this.$http.get('/api/goods').then(res => {
+            let sellItem = JSON.parse(window.localStorage.getItem('sellItem'));
+            this.$http.get('/api/goods')
+            .then(res => {
                 if (res.data.erron === ERR_OK) {
                     this.goods = res.data.data;
                     this.$nextTick(() => {
                         this._initScroll();
+                        // 计算每大层离浏览器的距离
                         this._calculateHeight();
                     });
+                    return ERR_OK;
                 }
+                return '';
+            })
+            .then((res) => {
+              if(res === 0) {
+                if(sellItem && sellItem.length > 0) {
+                  this.goods.forEach(good => {
+                    good.foods.forEach(foods => {
+                      sellItem.forEach(food => {
+                        if(foods.id === food.id) {
+                          this.$set(foods, 'count', food.count);
+                          return;
+                        }
+                      });
+                    });
+                  });
+                }
+              }
             });
         },
         methods: {
@@ -89,6 +110,7 @@
                 });
 
                 this.foodScroll.on('scroll', (pos) => {
+                  // 获取当前滚动位置
                     this.scrollY = Math.abs(Math.round(pos.y));
                 });
             },
@@ -144,21 +166,17 @@
             },
             selectFoods: function() {
               let foods = [];
-              this.goods.filter(good => {
+              this.goods.forEach(good => {
                 // good 循环获得大分类。
-                // good.foods.forEach(food => {
-                //   // good.foods 循环所有大分类里面的商品
-                //   if(food.count) {
-                //     // 判断是否有count 有则表示商品有被选中，push
-                //     foods.push(food);
-                //   }
-                // });
-                good.foods.filter(food => {
+                good.foods.forEach(food => {
+                  // good.foods 循环所有大分类里面的商品
                   if(food.count) {
+                    // 判断是否有count 有则表示商品有被选中，push
                     foods.push(food);
                   }
                 });
               });
+              window.localStorage.setItem('sellItem', JSON.stringify(foods));
               return foods;
             }
         },

@@ -3,7 +3,7 @@
         <div class="shopcart">
             <div class="content" @click="toggleList">
                 <div class="content-left">
-                    <div class="logo-wrapper">
+                    <div class="logo-wrapper" ref="logo" :class="{'fade':logoFade}">
                         <div class="logo" :class="{on:totalCount>0}">
                             <i class="icon-shopping_cart"></i>
                         </div>
@@ -20,7 +20,7 @@
             </div>
             <div class="ball-container">
                 <template v-for="ball in balls">
-                    <transition name="drop" v-on:before-enter="beforeEnter" v-on:after-enter="afterEnter" v-on:enter="enter">
+                    <transition name="drop" v-on:before-enter="beforeEnter" v-on:after-enter="afterEnter" v-on:enter="enter" v-on:after-leave="afterLeave">
                         <div v-show="ball.show" class="ball">
                             <div class="inner inner-hook"></div>
                         </div>
@@ -107,7 +107,8 @@
                         }
                     ],
                     dropBall: [],
-                    fold: true
+                    fold: true,
+                    logoFade: false
                 };
             },
         created: function() {
@@ -209,6 +210,12 @@
                         inner.style.transform = `translate3d(${x}px,0,0)`;
                     }
                 }
+                    // this.logoFade = false;
+                    this.$nextTick(() => {
+                        if(this.done) {
+                            this.logoFade = false;
+                        }
+                    });
             },
             enter: function(el, done) {
                 /* eslint-disable no-unused-vars */
@@ -230,6 +237,16 @@
                         ball.show = false;
                         el.style.display = 'none';
                 };
+            },
+            afterLeave: function() {
+                this.done = false;
+                    clearTimeout(this.setTime);
+                    this.setTime = setTimeout(() => {
+                        if (!this.done) {
+                            this.done = true;
+                        }
+                    }, 300);
+                this.logoFade = true;
             },
             toggleList: function() {
                 if(!this.totalCount) {
@@ -322,6 +339,37 @@
                         color: #fff;
                         background: rgb(240, 20, 20);
                         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .4);
+                    }
+                    &.fade{
+                        animation: shake .5s ease-in-out;
+                    }
+                    @at-root{
+                        @keyframes shake {
+                            0% {
+                                -webkit-transform: scale(1);
+                                transform: scale(1);
+                            }
+
+                            25% {
+                                -webkit-transform: scale(.8);
+                                transform: scale(.8);
+                            }
+
+                            50% {
+                                -webkit-transform: scale(1.1);
+                                transform: scale(1.1);
+                            }
+
+                            75% {
+                                -webkit-transform: scale(.9);
+                                transform: scale(.9);
+                            }
+
+                            100% {
+                                -webkit-transform: scale(1);
+                                transform: scale(1);
+                            }
+                        }
                     }
                 }
                 .price {
