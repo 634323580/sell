@@ -13,7 +13,9 @@
       </div>
     </div>
     <keep-alive>
-      <router-view :seller="seller"></router-view>
+      <transition name="fead">
+        <router-view :seller="seller"></router-view>
+      </transition>
     </keep-alive>
   </div>
 </template>
@@ -66,5 +68,11 @@
         }
       }
     }
+  }
+  .fead-enter-active,.fead-leave-active{
+    transition:.2s ease;
+  }
+  .fead-enter,.fead-leave-active{
+    opacity: 0;
   }
 </style>

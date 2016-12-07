@@ -108,8 +108,6 @@
             },
             hideDetail: function() {
                 this.detailShow = false;
-            },
-            noop: function() {
             }
         },
         created: function() {

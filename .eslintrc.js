@@ -21,6 +21,10 @@ module.exports = {
     'semi':['error', 'always'],
     'indent': 0,
     'space-before-function-paren': 0,
-    'keyword-spacing': 0
+    'keyword-spacing': 0,
+    'no-trailing-spaces': 0,
+    'padded-blocks': 0,
+    'semi': 0,
+    'eol-last': 0
   }
 }

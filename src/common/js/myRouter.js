@@ -31,7 +31,7 @@ import components from 'common/js/components';
     // 重定向路由
     {
       path: '/',
-      redirect: '/goods'
+      redirect: '/ratings'
     }
   ];
 
