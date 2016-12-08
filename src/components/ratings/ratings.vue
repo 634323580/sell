@@ -28,9 +28,9 @@
             <ratingselect ref="ratingselect" :select-type="selectType" :only-content="onlyContent" :desc="desc" :ratings="ratings"></ratingselect>
                 <div class="rating-wrapper">
                     <ul v-show="ratings && ratings.length">
-                        <li v-for="rating in ratings" class="rating-item" v-show="needShow(rating.rateType, rating.text)">
+                        <li v-for="rating in ratings" class="rating-item border-1px" v-show="needShow(rating.rateType, rating.text)">
                             <div class="user-head-img">
-                                <img :src="rating.avatar" class="avatar" alt="" width="12" height="12">
+                                <img :src="rating.avatar" class="avatar" alt="" width="28" height="28">
                             </div>
                             <div class="content">
                             <div class="user">
@@ -86,7 +86,6 @@
                 })
                 .then(() => {
                      this.$nextTick(() => {
-                        
                         if(!this.scroll) {
                             this.scroll = new BScroll(this.$refs.ratings, {
                                 click: true
@@ -134,7 +133,8 @@
         }
     };
 </script>
-<style lang="scss" scoped>
+<style lang="scss" rel="stylesheet/scss" scoped>
+  @import '../../common/scss/mixin';
     .ratings{
         position: absolute;
         top: 174px;
@@ -227,7 +227,8 @@
         .rating-item{
             padding-bottom: 18px;
             margin-bottom: 18px;
-            border-bottom:1px solid #e6e7e8;
+            /*border-bottom:1px solid #e6e7e8;*/
+            @include border-1px(#e6e7e8);
             overflow:hidden;
             .user-head-img{
                 float:left;
@@ -305,6 +306,7 @@
                         text-overflow:ellipsis;
                         white-space: nowrap;
                         overflow: hidden;
+                        border-radius: 2px;
                     }
                 }
             }

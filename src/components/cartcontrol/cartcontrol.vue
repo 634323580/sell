@@ -36,9 +36,7 @@
                     this.food.count++;
                 }
                 // bus组件通信
-                   setTimeout(() => {
-                       Bus.$emit(':eventCartadd', event.target);
-                   });
+                   Bus.$emit(':eventCartadd', event.target);
             },
             // 删除商品
             decreaseCart: function (event) {

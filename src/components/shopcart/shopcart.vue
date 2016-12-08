@@ -50,7 +50,7 @@
             </transitiona>
         </div>
         <transition name="mask">
-            <div class="list-mask" v-show="listShow" @click="toggleList"></div>
+            <div class="list-mask" v-show="listShow" @click="hideList"></div>
         </transition>
     </div>
 </template>
@@ -221,13 +221,11 @@
                 /* eslint-disable no-unused-vars */
                 let elHeight = el.offsetHeight;
                 this.$nextTick(() => {
-                        setTimeout(function() {
                             el.style.webkitTransform = 'translate3d(0,0,0)';
                             el.style.transform = 'translate3d(0,0,0)';
                             let inner = el.getElementsByClassName('inner-hook')[0];
                             inner.style.webkitTransform = 'translate3d(0,0,0)';
                             inner.style.transform = 'translate3d(0,0,0)';
-                        });
                 });
                 done();
             },
@@ -245,7 +243,7 @@
                         if (!this.done) {
                             this.done = true;
                         }
-                    }, 300);
+                    }, 250);
                 this.logoFade = true;
             },
             toggleList: function() {
@@ -255,6 +253,9 @@
                 }
                 // 否则控制显示隐藏
                 this.fold = !this.fold;
+            },
+            hideList: function() {
+                this.fold = true;
             },
             empty: function() {
                 // 清空购物车

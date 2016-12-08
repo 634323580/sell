@@ -50,6 +50,13 @@
             background-size: 12px 12px;
             background-repeat: no-repeat;
         }
+        .icon-4{
+            width: 16px;
+            height: 16px;
+            margin-right: 6px;
+            background-size: 16px 16px;
+            background-repeat: no-repeat;
+        }
         .icon-1.decrease {
             @include bg-image('decrease_1');
         }
@@ -62,7 +69,7 @@
         .icon-1.invoice {
             @include bg-image('invoice_1');
         }
-        .icon-2.special {
+        .icon-1.special {
             @include bg-image('special_2');
         }
         .icon-2.decrease {
@@ -95,7 +102,20 @@
         .icon-3.invoice {
             @include bg-image('invoice_3');
         }
-        .icon-3.special {
-            @include bg-image('special_3');
+        .icon-4.special {
+            @include bg-image('special_4');
         }
+        .icon-4.decrease {
+            @include bg-image('decrease_4');
+        }
+        .icon-4.discount {
+            @include bg-image('discount_4');
+        }
+        .icon-4.guarantee {
+            @include bg-image('guarantee_4');
+        }
+        .icon-4.invoice {
+            @include bg-image('invoice_4');
+        }
+        
 </style>

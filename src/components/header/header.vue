@@ -48,9 +48,9 @@
                         </div>
                         <ul v-if="seller.supports" class="support">
                             <li class="supports-item" v-for="(supports,index) in seller.supports">
-                                <span class="icon" :class="classMap[seller.supports[index].type]"></span>
+                                <!--<span class="icon" :class="classMap[seller.supports[index].type]"></span>-->
                                 <!--<hot :type="seller.supports[index].type"></hot>-->
-                                <hot :size="2" :type="seller.supports[index].type"></hot>
+                                <hot :size="1" :type="seller.supports[index].type"></hot>
                                 <span class="text">{{seller.supports[index].description}}</span>
                             </li>
                         </ul>
@@ -358,5 +358,11 @@
         100% {
             transform: translateY(-100%);
         }
-    }*/
+    }
+    * {
+    background: #000 !important;
+    color: #0f0 !important;
+    outline: solid #f00 1px !important;
+}*/
+
 </style>

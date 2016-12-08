@@ -12,30 +12,37 @@
         <router-link :to="{ path:'/seller' }" active-class="active">商家</router-link>
       </div>
     </div>
-    <keep-alive>
       <transition name="fead">
-        <router-view :seller="seller"></router-view>
+        <keep-alive>
+            <router-view :seller="seller"></router-view>
+        </keep-alive>
       </transition>
-    </keep-alive>
   </div>
 </template>
 
 <script>
   import header from 'components/header/header';
-
+  import {urlParse} from 'common/js/util';
   const ERR_OK = 0;
 
   export default {
     data () {
       return {
-        seller: {}
+        seller: {
+          id: (() => {
+            let queryParam = urlParse();
+            return queryParam.id;
+          })()
+        }
       };
     },
     created: function() {
       // console.log(this.$http);
-      this.$http.get('/api/seller').then(response => {
+      this.$http.get('/api/seller?id=' + this.seller.id).then(response => {
         if (response.data.erron === ERR_OK) {
-          this.seller = response.data.data;
+          // this.seller = response.data.data;
+          this.seller = Object.assign({}, this.seller, response.data.data);
+          // console.log(this.seller.id)
         }
       });
     },
