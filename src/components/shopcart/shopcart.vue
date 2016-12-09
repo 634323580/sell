@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="shopcart-wrapper">
         <div class="shopcart">
             <div class="content" @click="toggleList">
                 <div class="content-left">
@@ -33,7 +33,7 @@
                         <h2 class="title">购物车</h2>
                         <span class="empty" @click="empty">清空</span>
                     </div>
-                    <div class="list-content" ref="listContent"  @click="eventConstructed($event)">
+                    <div class="list-content" ref="listContent" @click="eventConstructed($event)">
                         <ul>
                             <li class="food border-1px" v-for="food in selectFoods">
                                 <span class="name">{{food.name}}</span>
@@ -47,7 +47,7 @@
                         </ul>
                     </div>
                 </div>
-            </transitiona>
+                </transitiona>
         </div>
         <transition name="mask">
             <div class="list-mask" v-show="listShow" @click="hideList"></div>
@@ -341,31 +341,27 @@
                         background: rgb(240, 20, 20);
                         box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .4);
                     }
-                    &.fade{
+                    &.fade {
                         animation: shake .5s ease-in-out;
                     }
-                    @at-root{
+                    @at-root {
                         @keyframes shake {
                             0% {
                                 -webkit-transform: scale(1);
                                 transform: scale(1);
                             }
-
                             25% {
                                 -webkit-transform: scale(.8);
                                 transform: scale(.8);
                             }
-
                             50% {
                                 -webkit-transform: scale(1.1);
                                 transform: scale(1.1);
                             }
-
                             75% {
                                 -webkit-transform: scale(.9);
                                 transform: scale(.9);
                             }
-
                             100% {
                                 -webkit-transform: scale(1);
                                 transform: scale(1);

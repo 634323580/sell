@@ -1,48 +1,50 @@
 <template>
-  <div class="goods">
-    <div class="menu-wrapper" ref="menu">
-      <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'on':index === currentIndex}" @click="_selectMenu(index,$event)">
-          <span class="text border-1px">
+  <div class="goods-wrapper">
+    <div class="goods">
+      <div class="menu-wrapper" ref="menu">
+        <ul>
+          <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'on':index === currentIndex}" @click="_selectMenu(index,$event)">
+            <span class="text border-1px">
                         <template v-if="item.type > 0">
                             <hot :size='3' :type="item.type"></hot>
                         </template>
                         <span>{{item.name}}</span>
-          </span>
-        </li>
-      </ul>
-    </div>
-    <div class="foods-wrapper" ref="foods">
-      <ul>
-        <li v-for="item in goods" class="food-list food-list-hook">
-          <h2 class="title">{{item.name}}</h2>
-          <ul>
-            <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" class="food-item border-1px">
-              <div class="icon">
-                <img :src="food.icon" alt="">
-              </div>
-              <div class="content">
-                <h3 class="name">{{food.name}}</h3>
-                <p class="desc">{{food.description}}</p>
-                <div class="extra">
-                  <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+      <div class="foods-wrapper" ref="foods">
+        <ul>
+          <li v-for="item in goods" class="food-list food-list-hook">
+            <h2 class="title">{{item.name}}</h2>
+            <ul>
+              <li @click="selectFood(food,$event)" v-for="(food,index) in item.foods" class="food-item border-1px">
+                <div class="icon">
+                  <img :src="food.icon" alt="">
                 </div>
-                <div class="price">
-                  <span class="now">￥{{food.price}}</span>
-                  <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                <div class="content">
+                  <h3 class="name">{{food.name}}</h3>
+                  <p class="desc">{{food.description}}</p>
+                  <div class="extra">
+                    <span class="count">月售{{food.sellCount}}份</span><span>好评率{{food.rating}}%</span>
+                  </div>
+                  <div class="price">
+                    <span class="now">￥{{food.price}}</span>
+                    <span class="old" v-show="food.oldPrice">￥{{food.oldPrice}}</span>
+                  </div>
+                  <div class="cartcontrol-wrapper">
+                    <cartcontrol :food="food"></cartcontrol>
+                  </div>
                 </div>
-                <div class="cartcontrol-wrapper">
-                  <cartcontrol :food="food"></cartcontrol>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </li>
-      </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <!--商品详情-->
+      <food :food="selectedFood" ref="food"></food>
     </div>
     <shopcart ref="shopcart" :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></shopcart>
-    <!--商品详情-->
-    <food :food="selectedFood" ref="food"></food>
   </div>
 </template>
 <script>
@@ -303,7 +305,7 @@
             color: rgb(147, 153, 159);
           }
         }
-        .cartcontrol-wrapper{
+        .cartcontrol-wrapper {
           position: absolute;
           right: 0;
           bottom: 14px;

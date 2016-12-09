@@ -1175,6 +1175,23 @@
       ]
     },
     {
+      "username": "3******c",
+      "rateTime": 1469281964000,
+      "deliveryTime": 30,
+      "score": 5,
+      "rateType": 0,
+      "text": "双击评论666",
+      "avatar": "http://static.galileo.xiaojukeji.com/static/tms/default_header.png",
+      "recommend": [
+        "番薯粥",
+        "猪头肉",
+        "烧鸭饭",
+        "湛江白切鸡",
+        "豌豆荚",
+        "牛腩河粉"
+      ]
+    },    
+    {
       "username": "2******3",
       "rateTime": 1469271264000,
       "deliveryTime": "",
