@@ -17,7 +17,6 @@
                     <hot :size="1" :type="seller.supports[0].type"></hot>
                     <span class="text">{{seller.supports[0].description}}</span>
                 </div>
-
             </div>
             <div v-if="seller.supports" @click="showDetail" class="support-count">
                 <span class="count">{{seller.supports.length}}个</span>
