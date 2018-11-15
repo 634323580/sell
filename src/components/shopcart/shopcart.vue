@@ -47,7 +47,7 @@
                         </ul>
                     </div>
                 </div>
-                </transitiona>
+                </transition>
         </div>
         <transition name="mask">
             <div class="list-mask" v-show="listShow" @click="hideList"></div>
@@ -498,7 +498,7 @@
             }
         }
     }
-    
+
     .list-mask {
         position: fixed;
         top: 0;

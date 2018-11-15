@@ -80,7 +80,7 @@
     import hot from 'components/hot/hot';
     import BScroll from 'better-scroll';
     export default {
-        name: 'header',
+        name: 'v-header',
         data() {
             return {
                 classMap: ['decrease', 'discount', 'special', 'invoice', 'guarantee'],
@@ -128,7 +128,7 @@
         overflow: hidden;
         background: rgba(7, 17, 27, .4);
     }
-    
+
     .content-wrapper {
         padding: 24px 12px 18px 24px;
         font-size: 0;
@@ -198,7 +198,7 @@
             }
         }
     }
-    
+
     .bulletin-wrapper {
         line-height: 28px;
         padding: 0 22px 0 12px;
@@ -228,7 +228,7 @@
             transform: translateY(-50%);
         }
     }
-    
+
     .background {
         position: absolute;
         top: 50%;
@@ -241,7 +241,7 @@
         filter: blur(10px);
         transform: translateY(-50%);
     }
-    
+
     .detail {
         position: fixed;
         z-index: 10;
@@ -341,7 +341,7 @@
             animation: bounce-out .5s;
         }*/
     }
-    
+
     /*@keyframes bounce-in {
         0% {
             transform: translateY(-100%);
@@ -350,7 +350,7 @@
             transform: translateY(0);
         }
     }
-    
+
     @keyframes bounce-out {
         0% {
             transform: translateY(0);
