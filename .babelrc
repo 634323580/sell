@@ -1,6 +1,0 @@
-{
-  "presets": ["es2015", "stage-2"],
-  "plugins": ["transform-runtime"],
-  "comments": false
-  // 表示生成的代码没有注释
-}
