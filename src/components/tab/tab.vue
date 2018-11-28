@@ -21,7 +21,7 @@
         :options="slideOptions"
       >
         <cube-slide-item v-for="(tab, index) in tabs" :key="index">
-          <component :is="tab.component" :data="tab.data"></component>
+          <component :is="tab.component" :data="tab.data" ref="component"></component>
         </cube-slide-item>
       </cube-slide>
     </div>
@@ -53,9 +53,16 @@
         }
       }
     },
+    mounted() {
+      this.onChange(this.index)
+    },
     methods: {
       onChange(current) {
         this.index = current
+        const instance = this.$refs.component[current]
+        if (instance && instance.fetch) {
+          instance.fetch()
+        }
       },
       onScroll(pos) {
         const tabBarWidth = this.$refs.tabBar.$el.clientWidth
