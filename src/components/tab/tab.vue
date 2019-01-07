@@ -1,8 +1,8 @@
 <template>
   <div class="tab">
     <cube-tab-bar
-      :showSlider=true
       :useTransition=false
+      :showSlider=true
       v-model="selectedLabel"
       :data="tabs"
       ref="tabBar"
@@ -16,12 +16,12 @@
         :show-dots=false
         :initial-index="index"
         ref="slide"
-        @change="onChange"
-        @scroll="onScroll"
         :options="slideOptions"
+        @scroll="onScroll"
+        @change="onChange"
       >
-        <cube-slide-item v-for="(tab, index) in tabs" :key="index">
-          <component :is="tab.component" :data="tab.data" ref="component"></component>
+        <cube-slide-item v-for="(tab,index) in tabs" :key="index">
+          <component ref="component" :is="tab.component" :data="tab.data"></component>
         </cube-slide-item>
       </cube-slide>
     </div>
@@ -53,24 +53,6 @@
         }
       }
     },
-    mounted() {
-      this.onChange(this.index)
-    },
-    methods: {
-      onChange(current) {
-        this.index = current
-        const instance = this.$refs.component[current]
-        if (instance && instance.fetch) {
-          instance.fetch()
-        }
-      },
-      onScroll(pos) {
-        const tabBarWidth = this.$refs.tabBar.$el.clientWidth
-        const slideWidth = this.$refs.slide.slide.scrollerWidth
-        const transform = -pos.x / slideWidth * tabBarWidth
-        this.$refs.tabBar.setSliderTransform(transform)
-      }
-    },
     computed: {
       selectedLabel: {
         get() {
@@ -80,6 +62,24 @@
           this.index = this.tabs.findIndex((value) => {
             return value.label === newVal
           })
+        }
+      }
+    },
+    mounted() {
+      this.onChange(this.index)
+    },
+    methods: {
+      onScroll(pos) {
+        const tabBarWidth = this.$refs.tabBar.$el.clientWidth
+        const slideWidth = this.$refs.slide.slide.scrollerWidth
+        const transform = -pos.x / slideWidth * tabBarWidth
+        this.$refs.tabBar.setSliderTransform(transform)
+      },
+      onChange(current) {
+        this.index = current
+        const instance = this.$refs.component[current]
+        if (instance && instance.fetch) {
+          instance.fetch()
         }
       }
     }

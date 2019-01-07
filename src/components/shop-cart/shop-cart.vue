@@ -1,36 +1,35 @@
 <template>
   <div>
     <div class="shopcart">
-      <div class="content">
+      <div class="content" @click="toggleList">
         <div class="content-left">
           <div class="logo-wrapper">
             <div class="logo" :class="{'highlight':totalCount>0}">
               <i class="icon-shopping_cart" :class="{'highlight':totalCount>0}"></i>
             </div>
             <div class="num" v-show="totalCount>0">
-                <bubble :num="totalCount"></bubble>
+              <bubble :num="totalCount"></bubble>
             </div>
           </div>
           <div class="price" :class="{'highlight':totalPrice>0}">￥{{totalPrice}}</div>
           <div class="desc">另需配送费￥{{deliveryPrice}}元</div>
         </div>
-        <div class="content-right">
+        <div class="content-right" @click="pay">
           <div class="pay" :class="payClass">
             {{payDesc}}
           </div>
         </div>
       </div>
       <div class="ball-container">
-        <div v-for="(ball, index) in balls" :key="index">
-            <transition
+        <div v-for="(ball,index) in balls" :key="index">
+          <transition
             @before-enter="beforeDrop"
             @enter="dropping"
-            @after-enter="afterDrop"
-            >
-              <div class="ball" v-show="ball.show">
-                <div class="inner inner-hook"></div>
-              </div>
-            </transition>
+            @after-enter="afterDrop">
+            <div class="ball" v-show="ball.show">
+              <div class="inner inner-hook"></div>
+            </div>
+          </transition>
         </div>
       </div>
     </div>
@@ -38,18 +37,19 @@
 </template>
 
 <script>
-  import bubble from 'components/bubble/bubble'
+  import Bubble from 'components/bubble/bubble'
+
   const BALL_LEN = 10
   const innerClsHook = 'inner-hook'
+
   function createBalls() {
-    let ret = []
+    let balls = []
     for (let i = 0; i < BALL_LEN; i++) {
-      ret.push({
-        show: false
-      })
+      balls.push({show: false})
     }
-    return ret
+    return balls
   }
+
   export default {
     name: 'shop-cart',
     props: {
@@ -66,11 +66,20 @@
       minPrice: {
         type: Number,
         default: 0
+      },
+      sticky: {
+        type: Boolean,
+        default: false
+      },
+      fold: {
+        type: Boolean,
+        default: true
       }
     },
     data() {
       return {
-        balls: createBalls()
+        balls: createBalls(),
+        listFold: this.fold
       }
     },
     created() {
@@ -110,76 +119,115 @@
       }
     },
     methods: {
-      /**
-       * @description 驱动小球动画
-       * @param el 按钮
-       */
+      toggleList() {
+        if (this.listFold) {
+          if (!this.totalCount) {
+            return
+          }
+          this.listFold = false
+          this._showShopCartList()
+          this._showShopCartSticky()
+        } else {
+          this.listFold = true
+          this._hideShopCartList()
+        }
+      },
+      pay(e) {
+        if (this.totalPrice < this.minPrice) {
+          return
+        }
+        this.$createDialog({
+          title: '支付',
+          content: `您需要支付${this.totalPrice}元`
+        }).show()
+        e.stopPropagation()
+      },
       drop(el) {
         for (let i = 0; i < this.balls.length; i++) {
           const ball = this.balls[i]
-          // 找到隐藏小球
           if (!ball.show) {
-            // 驱动 transition动画
             ball.show = true
-            // 存储按钮元素
             ball.el = el
-            // 存储正在执行动画的小球
             this.dropBalls.push(ball)
             return
           }
         }
       },
-      /**
-       * @description 动画开始前状态
-       * @param el 过渡的元素
-       */
       beforeDrop(el) {
-        // 获取正在运动的最后一个小球
         const ball = this.dropBalls[this.dropBalls.length - 1]
-        // 获取按钮的信息
         const rect = ball.el.getBoundingClientRect()
-        // 获取按钮离小球的x轴
         const x = rect.left - 32
-        // 获取按钮离小球的y轴
         const y = -(window.innerHeight - rect.top - 22)
         el.style.display = ''
-        // 设置小球外层的y轴
         el.style.transform = el.style.webkitTransform = `translate3d(0,${y}px,0)`
         const inner = el.getElementsByClassName(innerClsHook)[0]
-        // 设置小球内层的x轴
         inner.style.transform = inner.style.webkitTransform = `translate3d(${x}px,0,0)`
       },
-      /**
-       * @description 动画完成状态
-       * @param el 过渡的元素
-       * @param done 执行下一动画步骤
-       */
       dropping(el, done) {
-        // 触发浏览器重绘，tips：把一个元素移到一个位置之后执行下一个动画必须触发浏览器重绘
         this._reflow = document.body.offsetHeight
-        // 复原小球位置
         el.style.transform = el.style.webkitTransform = `translate3d(0,0,0)`
         const inner = el.getElementsByClassName(innerClsHook)[0]
         inner.style.transform = inner.style.webkitTransform = `translate3d(0,0,0)`
-        // 触发动画结束
         el.addEventListener('transitionend', done)
       },
-      /**
-       * @description 动画结束
-       * @param el 过渡的元素
-       */
       afterDrop(el) {
-        // 拿到最先执行动画的小球
         const ball = this.dropBalls.shift()
-        // 回收小球
         if (ball) {
           ball.show = false
           el.style.display = 'none'
         }
+      },
+      _showShopCartList() {
+        this.shopCartListComp = this.shopCartListComp || this.$createShopCartList({
+          $props: {
+            selectFoods: 'selectFoods'
+          },
+          $events: {
+            leave: () => {
+              this._hideShopCartSticky()
+            },
+            hide: () => {
+              this.listFold = true
+            },
+            add: (el) => {
+              this.shopCartStickyComp.drop(el)
+            }
+          }
+        })
+        this.shopCartListComp.show()
+      },
+      _showShopCartSticky() {
+        this.shopCartStickyComp = this.shopCartStickyComp || this.$createShopCartSticky({
+          $props: {
+            selectFoods: 'selectFoods',
+            deliveryPrice: 'deliveryPrice',
+            minPrice: 'minPrice',
+            fold: 'listFold',
+            list: this.shopCartListComp
+          }
+        })
+        this.shopCartStickyComp.show()
+      },
+      _hideShopCartList() {
+        const list = this.sticky ? this.$parent.list : this.shopCartListComp
+        list.hide && list.hide()
+      },
+      _hideShopCartSticky() {
+        this.shopCartStickyComp.hide()
+      }
+    },
+    watch: {
+      fold(newVal) {
+        this.listFold = newVal
+      },
+      totalCount(count) {
+        if (!this.fold && count === 0) {
+          this._hideShopCartList()
+        }
       }
     },
     components: {
-      bubble
+      Bubble
     }
   }
 </script>
