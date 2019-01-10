@@ -45,7 +45,7 @@
   function createBalls() {
     let balls = []
     for (let i = 0; i < BALL_LEN; i++) {
-      balls.push({show: false})
+      balls.push({ show: false })
     }
     return balls
   }
