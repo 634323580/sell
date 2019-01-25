@@ -34,7 +34,7 @@ app.use('/api', router)
 
 app.use(express.static('./dist'))
 
-const port = process.env.PORT || 80
+const port = process.env.PORT || 9000
 
 module.exports = app.listen(port, function (err) {
   if (err) {
