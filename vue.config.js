@@ -10,7 +10,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-  publicPath: '',
+  baseUrl: '',
   css: {
     loaderOptions: {
       stylus: {
